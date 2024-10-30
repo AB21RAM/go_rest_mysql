@@ -3,13 +3,15 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"go_rest_mysql/models"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 )
+
+var db *sql.DB
 
 type Info struct {
 	Name  string
@@ -17,15 +19,13 @@ type Info struct {
 	Email string
 }
 
-var db *sql.DB
-
 func InitializeCrudController(database *sql.DB) {
 	db = database
 }
 
 // Get all users
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("ALL USERS CALLED")
+	log.Println("ALL USERS CALLED")
 	rows, err := db.Query("SELECT name, email , phone FROM users")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -51,7 +51,11 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
-
+	// type Error struct {
+	// 	ErrorString string `json:"error"`
+	// }
+	// var error Error
+	log.Println("USER WITH ID: " + id + " CALLED")
 	var user Info
 	err := db.QueryRow("SELECT name, email, phone FROM users WHERE id = ?", id).Scan(&user.Name, &user.Email, &user.Phone)
 	if err != nil {

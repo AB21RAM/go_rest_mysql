@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"go_rest_mysql/config"
+	"go_rest_mysql/middleware"
 	"go_rest_mysql/routes"
 	"log"
 	"net/http"
@@ -26,7 +27,10 @@ func main() {
 
 	// Register routes
 	routes.UserRoutes(r)
-	routes.CrudRoutes(r)
+	// Protected routes
+	api := r.PathPrefix("/api").Subrouter()
+	api.Use(middleware.JWTAuthMiddleware)
+	routes.CrudRoutes(api) // Apply middleware to protect CRUD routes
 
 	// Start the server
 	log.Println("Server running on http://localhost:8080")
