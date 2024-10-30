@@ -49,15 +49,16 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 
 // Get a user by ID
 func GetUser(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id := params["id"]
-	// type Error struct {
-	// 	ErrorString string `json:"error"`
-	// }
-	// var error Error
-	log.Println("USER WITH ID: " + id + " CALLED")
+	// from the token destructring
+	email := r.Context().Value("email").(string)
+	/*
+		// from the routes parameters vars
+		params := mux.Vars(r)
+		id := params["id"]
+	*/
+	log.Println("USER WITH email: " + email + " CALLED")
 	var user Info
-	err := db.QueryRow("SELECT name, email, phone FROM users WHERE id = ?", id).Scan(&user.Name, &user.Email, &user.Phone)
+	err := db.QueryRow("SELECT name, email, phone FROM users WHERE email = ?", email).Scan(&user.Name, &user.Email, &user.Phone)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			http.Error(w, "User not found", http.StatusNotFound)
