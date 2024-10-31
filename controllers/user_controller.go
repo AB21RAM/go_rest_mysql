@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go_rest_mysql/models"
+	"log"
 	"net/http"
 	"time"
 
@@ -55,6 +56,13 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "SUCCESS"})
+}
+
+func HelloTest(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusCreated)
+	ipAddress := r.RemoteAddr // Get the IP address of the calling device
+	log.Printf("Hello called by %s\n", ipAddress)
+	json.NewEncoder(w).Encode(map[string]string{"STATUS": "HELLO WORLD", "CALLER_IP": ipAddress})
 }
 
 // Login user

@@ -9,4 +9,5 @@ import (
 func UserRoutes(r *mux.Router) {
 	r.HandleFunc("/register", controllers.RegisterUser).Methods("POST")
 	r.HandleFunc("/login", controllers.LoginUser).Methods("POST")
+	r.HandleFunc("/hello", controllers.HelloTest).Methods("GET")
 }
